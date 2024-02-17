@@ -6,7 +6,7 @@
   useHead({
     title: 'login'
   })
-
+  // const supabase = useSupabaseClient()
   const emailRef = ref('')
   const passwordRef = ref('')
   const nameRef = ref('')
@@ -18,6 +18,15 @@
     isLoadingStore.set(true)
     await router.push('/')
   }
+  // const signInWithOtp = async () => {
+  //   const { error } = await supabase.auth.signInWithOtp({
+  //     email: emailRef.value,
+  //     options: {
+  //       emailRedirectTo: 'http://localhost:3000/',
+  //     }
+  //   })
+  //   if (error) console.log(error)
+  // }
 </script>
 
 <template>
@@ -29,7 +38,7 @@
         <Input v-model="emailRef" placeholder="Почта" type="email" class="mb-3"/>
         <Input v-model="passwordRef" placeholder="Пароль" type="password" class="mb-3"/>
         <div class="flex items-center gap-5 justify-center">
-            <button class="button" @click.prevent="login">Войти</button>
+            <button class="button" @click.prevent="signInWithOtp">Войти</button>
             <button class="button">Регистрация</button>
         </div>
       </form>
