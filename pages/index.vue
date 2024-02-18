@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import type {ICard, IColumn} from '~/components/kanban/kanban.type'
-import {useKanbanQuery} from "~/components/kanban/useKanbanQuery";
 
-import {useRequestHeader} from "#app/composables/ssr";
-import {useRequestHeaders} from "#imports";
-
+import {userTokenStore} from '~/store/userTokenStore'
+import CreateTask from "~/components/kanban/CreateTask.vue";
 useHead({
   title: 'Kanban'
 })
@@ -14,39 +11,68 @@ useHead({
 const dataCol = [
   {
     id: 1,
-    title: 'on-hold'
+    title: 'on-hold',
+    row: 0,
+    // color: 'yellow'
   },
   {
     id: 2,
-    title: 'in-progress'
+    title: 'in-progress',
+    row: 1
   },
   {
     id: 3,
-    title: 'needs-review'
+    title: 'needs-review',
+    row: 2
   },
   {
     id: 4,
-    title: 'approved'
+    title: 'approved',
+    row: 3
   },
 ]
 
 // const dragCardRef = ref<ICard | null>(null)
 // const sourceColumnRef = ref<IColumn|null>(null)
 
-const authorization = useRequestHeader('Bearer')
-const headers = useRequestHeaders(['cookie'])
-const token = '9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b'
-try {
-  const data:any  = await $fetch('https://trello.backend.tests.nekidaem.ru/api/v1/cards/',
+
+let userToken = userTokenStore()
+const newToken:any = await $fetch('https://trello.backend.tests.nekidaem.ru/api/v1/users/token/refresh/',
+    {
+      method: "POST",
+      body: {"refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwODMzMjk3NCwianRpIjoiNDBlZThhZTg2ZjQ4NDcxZGI4MDg4ZDQxYjlmMTBhZDIiLCJ1c2VyX2lkIjoxMTYyfQ.rpusUx8_Ep13JBhrD6e7JjgMffKI_opGIBXy6j3fiAg"}
+    },
+
+)
+
+userToken.set(newToken.access)
+
+
+console.log(userToken.$state.token, 'token')
+
+async function createTodo() {
+  await $fetch('https://trello.backend.tests.nekidaem.ru/api/v1/cards/',
+      {
+        method: 'POST',
+        headers: {'Authorization': `JWT ${userToken.$state.token}`},
+        body: {
+          "row": "0",
+          "text": "string"
+        }
+      })
+}
+let cards: unknown[] = []
+// async function getCards () {
+  const data = await $fetch('https://trello.backend.tests.nekidaem.ru/api/v1/cards/',
       {
         method: 'GET',
-        headers: {'Authorization': `Token ${token}`},
+        headers: {'Authorization': `JWT ${userToken.$state.token}`},
 
       })
-} catch (e) {
-  console.log(e)
-}
-
+//   console.log(data, 'data')
+//   cards = [data]
+// }
+console.log(data, 'data')
 
 
 
@@ -58,23 +84,36 @@ try {
   </div>
   <div class="grid grid-cols-4 gap-16" >
     <div v-for="(column, index) in dataCol" :key="column.id" class="gap-6 grid">
-      <h2>{{column.title}}</h2>
-      <Card draggable="true">
+      <div class="columnHeader" >
+        <h2>{{column.title}}</h2>
+      </div>
+
+      <Card draggable="true" v-for="card in data" :key="card.id">
         <CardHeader role="button"></CardHeader>
-        <CardTitle>id</CardTitle>
-        <CardContent>content</CardContent>
+        <CardTitle>{{card.id}}</CardTitle>
+        <CardContent>{{card.text}}</CardContent>
       </Card>
       <Card draggable="true">
         <CardHeader role="button"></CardHeader>
         <CardTitle>id</CardTitle>
         <CardContent>content</CardContent>
       </Card>
+<!--      <button @click.prevent="createTodo" >создать</button>-->
+      <button @click.prevent="getCards" >обновить</button>
+      <CreateTask/>
     </div>
+
 
   </div>
 
 </template>
 
 <style scoped>
-
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: yellow;
+  padding: 5px 15px;
+}
 </style>

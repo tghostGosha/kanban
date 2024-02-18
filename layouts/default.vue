@@ -12,8 +12,8 @@ const store = useAuthStore()
 </script>
 
 <template>
-  <section class="grid" style="min-height: 100vh; background-color: var(--background)">
-    <div>
+  <section class="grid " style="min-height: 100vh; background-color: var(--background)">
+    <div class="container">
       <slot/>
 
     </div>
@@ -24,5 +24,11 @@ const store = useAuthStore()
 <style scoped>
   .grid {
     display: grid;
+  }
+  .container {
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
   }
 </style>

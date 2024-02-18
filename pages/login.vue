@@ -10,7 +10,6 @@
   const emailRef = ref('')
   const passwordRef = ref('')
   const nameRef = ref('')
-
   const isLoadingStore = userIsLoadingStore()
   const router = useRouter()
 
@@ -21,6 +20,8 @@
   // const signInWithOtp = async () => {
   //   const { error } = await supabase.auth.signInWithOtp({
   //     email: emailRef.value,
+  //     username: emailRef.value,
+  //     password: emailRef.value,
   //     options: {
   //       emailRedirectTo: 'http://localhost:3000/',
   //     }
@@ -38,7 +39,7 @@
         <Input v-model="emailRef" placeholder="Почта" type="email" class="mb-3"/>
         <Input v-model="passwordRef" placeholder="Пароль" type="password" class="mb-3"/>
         <div class="flex items-center gap-5 justify-center">
-            <button class="button" @click.prevent="signInWithOtp">Войти</button>
+            <button class="button" @click.prevent="login">Войти</button>
             <button class="button">Регистрация</button>
         </div>
       </form>
@@ -61,3 +62,6 @@
   background-color: #94a3b8;
 }
 </style>
+
+<!--{"refresh":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwODMzMjk3NCwianRpIjoiNDBlZThhZTg2ZjQ4NDcxZGI4MDg4ZDQxYjlmMTBhZDIiLCJ1c2VyX2lkIjoxMTYyfQ.rpusUx8_Ep13JBhrD6e7JjgMffKI_opGIBXy6j3fiAg",
+"access":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA4MjQ2ODc0LCJqdGkiOiIyYThkMWYwM2M1Nzk0MWZjYjY1N2JlODYxNGFmYzU1MiIsInVzZXJfaWQiOjExNjJ9.KCcBrQtUcJhfE5EQDv6eX2JuHSnjOPWLrolOTNHQJQI"}-->
